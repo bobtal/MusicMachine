@@ -22,8 +22,18 @@ public class MainActivity extends AppCompatActivity {
         downloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "Downnloading", Toast.LENGTH_SHORT).show();
-                downloadSong();
+                Toast.makeText(MainActivity.this, "Downloading", Toast.LENGTH_SHORT).show();
+
+                Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        downloadSong();
+                    }
+                };
+
+                Thread thread = new Thread(runnable);
+                thread.setName("DownloadThread");
+                thread.start();
             }
         });
     }
