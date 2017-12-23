@@ -5,13 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.IBinder;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
 public class DownloadService extends Service {
 
     private static final String TAG = DownloadService.class.getSimpleName();
-
+    private DownloadHandler handler;
     /**
      * Called by the system when the service is first created.  Do not call this method directly.
      */
@@ -20,6 +21,10 @@ public class DownloadService extends Service {
         DownloadThread thread = new DownloadThread();
         thread.setName("DownloadThread");
         thread.start();
+
+        while (thread.handler == null) {
+        }
+        handler = thread.handler;
     }
 
     /**
@@ -62,20 +67,12 @@ public class DownloadService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         String song = intent.getStringExtra(MainActivity.KEY_SONG);
-        downloadSong(song);
-        return Service.START_REDELIVER_INTENT;
-    }
 
-    private void downloadSong(String song) {
-        long endTime =  System.currentTimeMillis() + 10 * 1000;
-        while (System.currentTimeMillis() < endTime) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        Log.d(TAG, song + " downloaded");
+        Message message = Message.obtain();
+        message.obj = song;
+        handler.sendMessage(message);
+
+        return Service.START_REDELIVER_INTENT;
     }
 
     /**
