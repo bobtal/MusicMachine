@@ -25,6 +25,7 @@ public class DownloadService extends Service {
         while (thread.handler == null) {
         }
         handler = thread.handler;
+        handler.setService(this);
     }
 
     /**
@@ -70,8 +71,10 @@ public class DownloadService extends Service {
 
         Message message = Message.obtain();
         message.obj = song;
+        message.arg1 = startId;
         handler.sendMessage(message);
 
+//        Log.d(TAG, song + "processed in onStartCommand");
         return Service.START_REDELIVER_INTENT;
     }
 
