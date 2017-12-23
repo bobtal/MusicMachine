@@ -24,29 +24,33 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Toast.makeText(MainActivity.this, "Downloading", Toast.LENGTH_SHORT).show();
 
-                Runnable runnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        downloadSong();
-                    }
-                };
+//                Runnable runnable = new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        downloadSong();
+//                    }
+//                };
+//
+//                Thread thread = new Thread(runnable);
+//                thread.setName("DownloadThread");
+//                thread.start();
 
-                Thread thread = new Thread(runnable);
+                DownloadThread thread = new DownloadThread();
                 thread.setName("DownloadThread");
                 thread.start();
             }
         });
     }
 
-    private void downloadSong() {
-        long endTime =  System.currentTimeMillis() + 10 * 1000;
-        while (System.currentTimeMillis() < endTime) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        Log.d(TAG, "Song downloaded");
-    }
+//    private void downloadSong() {
+//        long endTime =  System.currentTimeMillis() + 10 * 1000;
+//        while (System.currentTimeMillis() < endTime) {
+//            try {
+//                Thread.sleep(1000);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        Log.d(TAG, "Song downloaded");
+//    }
 }
