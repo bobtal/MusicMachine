@@ -1,5 +1,6 @@
 package com.bobantalevski.musicmachine;
 
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +18,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        final DownloadThread thread = new DownloadThread();
+        thread.setName("DownloadThread");
+        thread.start();
+
         downloadButton = findViewById(R.id.downloadButton);
 
         downloadButton.setOnClickListener(new View.OnClickListener() {
@@ -24,33 +29,13 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Toast.makeText(MainActivity.this, "Downloading", Toast.LENGTH_SHORT).show();
 
-//                Runnable runnable = new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        downloadSong();
-//                    }
-//                };
-//
-//                Thread thread = new Thread(runnable);
-//                thread.setName("DownloadThread");
-//                thread.start();
-
-                DownloadThread thread = new DownloadThread();
-                thread.setName("DownloadThread");
-                thread.start();
+                // Send Messages to Handler for processing
+                for (String song : Playlist.songs) {
+                    Message message = Message.obtain();
+                    message.obj = song;
+                    thread.handler.sendMessage(message);
+                }
             }
         });
     }
-
-//    private void downloadSong() {
-//        long endTime =  System.currentTimeMillis() + 10 * 1000;
-//        while (System.currentTimeMillis() < endTime) {
-//            try {
-//                Thread.sleep(1000);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        Log.d(TAG, "Song downloaded");
-//    }
 }
