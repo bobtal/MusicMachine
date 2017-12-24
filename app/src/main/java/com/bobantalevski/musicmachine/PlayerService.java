@@ -6,16 +6,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
-import android.os.Binder;
 import android.os.IBinder;
+import android.os.Message;
 import android.os.Messenger;
+import android.os.RemoteException;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
 public class PlayerService extends Service {
     private static final String TAG = PlayerService.class.getSimpleName();
     private MediaPlayer mediaPlayer;
-    public Messenger messenger = new Messenger(new PlayerHandler(this));
+    public Messenger serviceMessenger = new Messenger(new PlayerHandler(this));
+    public Messenger activityMessenger;
 
     /**
      * Called by the system when the service is first created.  Do not call this method directly.
@@ -75,6 +77,13 @@ public class PlayerService extends Service {
             public void onCompletion(MediaPlayer mp) {
                 stopSelf();
                 stopForeground(true);
+                Message message = Message.obtain();
+                message.arg1 = 3;
+                try {
+                    activityMessenger.send(message);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
             }
         });
         return Service.START_NOT_STICKY;
@@ -104,7 +113,7 @@ public class PlayerService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         Log.d(TAG, "onBind");
-        return messenger.getBinder();
+        return serviceMessenger.getBinder();
     }
 
     /**

@@ -18,6 +18,9 @@ public class PlayerHandler extends Handler {
      */
     @Override
     public void handleMessage(Message msg) {
+        if (msg.replyTo != null) {
+            playerService.activityMessenger = msg.replyTo;
+        }
         switch (msg.arg1) {
             case 0: // Play
                 playerService.play();
@@ -32,7 +35,7 @@ public class PlayerHandler extends Handler {
                 if (msg.arg2 == 1) {
                     message.arg2 = 1;
                 }
-                message.replyTo = playerService.messenger;
+                message.replyTo = playerService.serviceMessenger;
                 try {
                     msg.replyTo.send(message);
                 } catch (RemoteException e) {
