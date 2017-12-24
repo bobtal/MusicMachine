@@ -1,5 +1,6 @@
 package com.bobantalevski.musicmachine;
 
+import android.app.Notification;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -64,10 +65,16 @@ public class PlayerService extends Service {
      */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Notification.Builder notificationBuilder = new Notification.Builder(this);
+        notificationBuilder.setSmallIcon(R.mipmap.ic_launcher);
+        Notification notification = notificationBuilder.build();
+        startForeground(11, notification);
+
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 stopSelf();
+                stopForeground(true);
             }
         });
         return Service.START_NOT_STICKY;
