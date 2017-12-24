@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 public class PlayerService extends Service {
+    private static final String TAG = PlayerService.class.getSimpleName();
     private MediaPlayer mediaPlayer;
 
     /**
@@ -15,6 +17,7 @@ public class PlayerService extends Service {
      */
     @Override
     public void onCreate() {
+        Log.d(TAG, "onCreate");
         mediaPlayer = MediaPlayer.create(this, R.raw.jingle);
     }
 
@@ -41,6 +44,47 @@ public class PlayerService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
+        Log.d(TAG, "onBind");
         return null;
+    }
+
+    /**
+     * Called when all clients have disconnected from a particular interface
+     * published by the service.  The default implementation does nothing and
+     * returns false.
+     *
+     * @param intent The Intent that was used to bind to this service,
+     *               as given to {@link Context#bindService
+     *               Context.bindService}.  Note that any extras that were included with
+     *               the Intent at that point will <em>not</em> be seen here.
+     * @return Return true if you would like to have the service's
+     * {@link #onRebind} method later called when new clients bind to it.
+     */
+    @Override
+    public boolean onUnbind(Intent intent) {
+        Log.d(TAG, "onUnbind");
+        return super.onUnbind(intent);
+    }
+
+    /**
+     * Called by the system to notify a Service that it is no longer used and is being removed.  The
+     * service should clean up any resources it holds (threads, registered
+     * receivers, etc) at this point.  Upon return, there will be no more calls
+     * in to this Service object and it is effectively dead.  Do not call this method directly.
+     */
+    @Override
+    public void onDestroy() {
+        Log.d(TAG, "onDestroy");
+        mediaPlayer.release();
+        super.onDestroy();
+    }
+
+    // Client Methods
+    public void play() {
+        mediaPlayer.start();
+    }
+
+    public void pause() {
+        mediaPlayer.pause();
     }
 }
