@@ -18,12 +18,18 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     public static final String KEY_SONG = "song";
     private boolean bound = false;
+    private PlayerService playerService;
     private Button downloadButton;
     private Button playButton;
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
+        public void onServiceConnected(ComponentName name, IBinder binder) {
             bound = true;
+            PlayerService.LocalBinder localBinder = (PlayerService.LocalBinder) binder;
+            playerService = localBinder.getService();
+            if (playerService.isPlaying()) {
+                playButton.setText("Pause");
+            }
         }
 
         @Override
@@ -57,7 +63,15 @@ public class MainActivity extends AppCompatActivity {
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if (bound) {
+                    if (playerService.isPlaying()) {
+                        playerService.pause();
+                        playButton.setText("Play");
+                    } else {
+                        playerService.play();
+                        playButton.setText("Pause");
+                    }
+                }
             }
         });
     }

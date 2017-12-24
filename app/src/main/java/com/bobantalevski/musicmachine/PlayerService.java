@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.util.Log;
 public class PlayerService extends Service {
     private static final String TAG = PlayerService.class.getSimpleName();
     private MediaPlayer mediaPlayer;
+    private IBinder binder = new LocalBinder();
 
     /**
      * Called by the system when the service is first created.  Do not call this method directly.
@@ -45,7 +47,7 @@ public class PlayerService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         Log.d(TAG, "onBind");
-        return null;
+        return binder;
     }
 
     /**
@@ -79,7 +81,18 @@ public class PlayerService extends Service {
         super.onDestroy();
     }
 
+    public class LocalBinder extends Binder {
+
+        public PlayerService getService() {
+            return PlayerService.this;
+        }
+    }
+
     // Client Methods
+    public boolean isPlaying() {
+        return mediaPlayer.isPlaying();
+    }
+
     public void play() {
         mediaPlayer.start();
     }
