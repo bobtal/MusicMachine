@@ -7,13 +7,15 @@ import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
+import android.os.Messenger;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
 public class PlayerService extends Service {
     private static final String TAG = PlayerService.class.getSimpleName();
     private MediaPlayer mediaPlayer;
-    private IBinder binder = new LocalBinder();
+//    private IBinder binder = new LocalBinder();
+    private Messenger messenger = new Messenger(new PlayerHandler(this));
 
     /**
      * Called by the system when the service is first created.  Do not call this method directly.
@@ -96,7 +98,7 @@ public class PlayerService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         Log.d(TAG, "onBind");
-        return binder;
+        return messenger.getBinder();
     }
 
     /**
@@ -130,12 +132,12 @@ public class PlayerService extends Service {
         super.onDestroy();
     }
 
-    public class LocalBinder extends Binder {
-
-        public PlayerService getService() {
-            return PlayerService.this;
-        }
-    }
+//    public class LocalBinder extends Binder {
+//
+//        public PlayerService getService() {
+//            return PlayerService.this;
+//        }
+//    }
 
     // Client Methods
     public boolean isPlaying() {
