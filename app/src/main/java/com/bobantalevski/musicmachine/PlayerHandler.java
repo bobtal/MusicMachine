@@ -29,6 +29,10 @@ public class PlayerHandler extends Handler {
                 int isPlaying = playerService.isPlaying() ? 1 : 0;
                 Message message = Message.obtain();
                 message.arg1 = isPlaying;
+                if (msg.arg2 == 1) {
+                    message.arg2 = 1;
+                }
+                message.replyTo = playerService.messenger;
                 try {
                     msg.replyTo.send(message);
                 } catch (RemoteException e) {

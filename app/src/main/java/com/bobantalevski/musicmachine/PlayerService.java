@@ -14,8 +14,7 @@ import android.util.Log;
 public class PlayerService extends Service {
     private static final String TAG = PlayerService.class.getSimpleName();
     private MediaPlayer mediaPlayer;
-//    private IBinder binder = new LocalBinder();
-    private Messenger messenger = new Messenger(new PlayerHandler(this));
+    public Messenger messenger = new Messenger(new PlayerHandler(this));
 
     /**
      * Called by the system when the service is first created.  Do not call this method directly.
@@ -131,13 +130,6 @@ public class PlayerService extends Service {
         mediaPlayer.release();
         super.onDestroy();
     }
-
-//    public class LocalBinder extends Binder {
-//
-//        public PlayerService getService() {
-//            return PlayerService.this;
-//        }
-//    }
 
     // Client Methods
     public boolean isPlaying() {
