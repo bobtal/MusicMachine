@@ -18,7 +18,8 @@
         </activity>
         <service android:name=".DownloadService"/>
         <service android:name=".DownloadIntentService"/>
-        <service android:name=".PlayerService"/>
+        <service android:name=".PlayerService"
+            android:process=":playerprocess"/>
     </application>
 
 </manifest>
